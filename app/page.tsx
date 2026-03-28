@@ -552,7 +552,7 @@ export default async function HomePage() {
                       asChild
                       size="lg"
                       variant="outline"
-                      className="rounded-full border-white/20 bg-white/5 px-7 text-white hover:bg-white/10"
+                      className="rounded-full border-white/20 bg-white/5 px-7 text-white"
                     >
                       <Link href="/login">Sign in</Link>
                     </Button>

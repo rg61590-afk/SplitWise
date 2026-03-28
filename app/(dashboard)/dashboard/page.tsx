@@ -188,7 +188,7 @@ export default function DashboardPage() {
                   <Button
                     asChild
                     variant="outline"
-                    className="rounded-full border-white/15 bg-white/5 text-white hover:bg-white/10"
+                    className="rounded-full border-white/15 bg-white/5 text-white "
                   >
                     <Link href="/settlements">
                       Review settlements

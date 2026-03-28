@@ -77,7 +77,7 @@ export function DashboardHeader({ user }: { user: UserProps }) {
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                className="relative h-10 w-10 rounded-full border border-slate-200 bg-white p-0 hover:bg-slate-50"
+                className="relative h-10 w-10 rounded-full border border-slate-200 bg-white p-0 hover:bg-slate-50 cursor-pointer"
               >
                 <Avatar className="h-9 w-9">
                   <AvatarImage

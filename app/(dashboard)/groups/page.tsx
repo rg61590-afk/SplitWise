@@ -103,7 +103,7 @@ export default function GroupsPage() {
               <div className="mt-8 flex flex-col gap-4 sm:flex-row">
                 <Button
                   onClick={() => setIsCreateOpen(true)}
-                  className="rounded-full bg-white text-slate-950 hover:bg-slate-100"
+                  className="rounded-full bg-white text-slate-950 hover:bg-slate-100 cursor-pointer"
                 >
                   <Plus className="mr-2 h-4 w-4" />
                   Create group
@@ -111,7 +111,7 @@ export default function GroupsPage() {
                 <Button
                   asChild
                   variant="outline"
-                  className="rounded-full border-white/15 bg-white/5 text-white hover:bg-white/10"
+                  className="rounded-full border-white/15 bg-white/5 text-white "
                 >
                   <Link href="/dashboard">
                     Back to overview
@@ -172,7 +172,7 @@ export default function GroupsPage() {
           action={
             <Button
               onClick={() => setIsCreateOpen(true)}
-              className="rounded-full bg-slate-950 hover:bg-slate-900"
+              className="cursor-pointer rounded-full bg-slate-950 hover:bg-slate-900"
             >
               <Plus className="mr-2 h-4 w-4" />
               Create group

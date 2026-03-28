@@ -148,7 +148,7 @@ export default function SettingsPage() {
               </p>
               <Button
                 variant="destructive"
-                className="mt-5 rounded-full"
+                className="mt-5 rounded-full cursor-pointer"
                 onClick={() => signOut({ callbackUrl: "/" })}
               >
                 <LogOut className="mr-2 h-4 w-4" />

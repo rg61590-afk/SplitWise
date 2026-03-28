@@ -230,7 +230,7 @@ export default function LoginPage() {
               <CardContent className="space-y-5 px-7 py-7">
                 <Button
                   variant="outline"
-                  className="h-12 w-full rounded-2xl border-slate-200 bg-white text-base shadow-sm hover:bg-slate-50"
+                  className="h-12 w-full rounded-2xl border-slate-200 bg-white text-base shadow-sm hover:bg-slate-50 cursor-pointer"
                   onClick={handleGoogleSignIn}
                   disabled={isGoogleLoading || isLoading}
                 >
@@ -306,7 +306,7 @@ export default function LoginPage() {
 
                   <Button
                     type="submit"
-                    className="h-12 w-full rounded-2xl bg-slate-950 text-base text-white shadow-[0_20px_40px_-20px_rgba(15,23,42,0.8)] hover:bg-slate-900"
+                    className="h-12 w-full rounded-2xl bg-slate-950 text-base text-white shadow-[0_20px_40px_-20px_rgba(15,23,42,0.8)] hover:bg-slate-900 cursor-pointer"
                     disabled={isLoading || isGoogleLoading}
                   >
                     {isLoading ? (
