@@ -268,7 +268,7 @@ export default function DashboardPage() {
                           {settlement.payer.name} says payment is done
                         </p>
                         <p className="text-sm text-slate-500">
-                          {settlement.group.name}
+                          {settlement?.group?.name}
                         </p>
                       </div>
                     </div>

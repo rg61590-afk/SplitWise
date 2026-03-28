@@ -183,7 +183,7 @@ export default function GroupsPage() {
         <section className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {groups.map((group) => (
             <Link key={group._id} href={`/groups/${group._id}`}>
-              <Card className="group h-full rounded-[2rem] border-white/80 bg-white/80 p-0 shadow-[0_22px_70px_-45px_rgba(15,23,42,0.28)] transition-all duration-300 hover:-translate-y-1 hover:bg-white backdrop-blur">
+              <Card className="group h-full  rounded-4xl border-white/80 bg-white/80 p-4 shadow-[0_22px_70px_-45px_rgba(15,23,42,0.28)] transition-all duration-300 hover:-translate-y-1 hover:bg-white backdrop-blur">
                 <CardHeader className="pb-4">
                   <div className="flex items-start justify-between gap-4">
                     <div>

@@ -209,10 +209,10 @@ export default function SettlementsPage() {
               </p>
               <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-slate-500">
                 <Link
-                  href={`/groups/${settlement.group._id}`}
+                  href={`/groups/${settlement?.group?._id}`}
                   className="inline-flex items-center gap-1 font-medium text-emerald-700 hover:underline"
                 >
-                  {settlement.group.name}
+                  {settlement?.group?.name}
                   <ExternalLink className="h-3.5 w-3.5" />
                 </Link>
                 <span>{format(new Date(settlement.createdAt), "MMM d, yyyy")}</span>
