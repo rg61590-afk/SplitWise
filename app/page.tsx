@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Manrope, Space_Grotesk } from "next/font/google";
+import { auth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -74,7 +75,10 @@ const metrics = [
   { label: "Balance confusion", value: "Near zero" },
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const session = await auth();
+  const isLoggedIn = !!session?.user;
+
   return (
     <main
       className={`${manrope.variable} ${spaceGrotesk.variable} min-h-screen overflow-x-hidden bg-[linear-gradient(180deg,#fbfdf7_0%,#f4fbf5_42%,#ffffff_100%)] text-foreground`}
@@ -106,18 +110,32 @@ export default function HomePage() {
           </Link>
 
           <nav className="flex items-center gap-3">
-            <Button variant="ghost" asChild className="rounded-full px-5">
-              <Link href="/login">Sign in</Link>
-            </Button>
-            <Button
-              asChild
-              className="rounded-full bg-foreground px-5 text-background shadow-[0_18px_35px_-18px_rgba(10,15,22,0.75)] hover:bg-foreground/90"
-            >
-              <Link href="/register">
-                Get started
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </Button>
+            {isLoggedIn ? (
+              <Button
+                asChild
+                className="rounded-full bg-foreground px-5 text-background shadow-[0_18px_35px_-18px_rgba(10,15,22,0.75)] hover:bg-foreground/90"
+              >
+                <Link href="/dashboard">
+                  Dashboard
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </Button>
+            ) : (
+              <>
+                <Button variant="ghost" asChild className="rounded-full px-5">
+                  <Link href="/login">Sign in</Link>
+                </Button>
+                <Button
+                  asChild
+                  className="rounded-full bg-foreground px-5 text-background shadow-[0_18px_35px_-18px_rgba(10,15,22,0.75)] hover:bg-foreground/90"
+                >
+                  <Link href="/register">
+                    Get started
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </Button>
+              </>
+            )}
           </nav>
         </div>
       </header>
@@ -147,24 +165,39 @@ export default function HomePage() {
             </p>
 
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-              <Button
-                asChild
-                size="lg"
-                className="h-[52px] rounded-full bg-emerald-600 px-7 text-base shadow-[0_22px_45px_-20px_rgba(5,150,105,0.85)] hover:bg-emerald-700"
-              >
-                <Link href="/register">
-                  Start splitting for free
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-              </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="h-[52px] rounded-full border-slate-200 bg-white/80 px-7 text-base backdrop-blur hover:bg-white"
-              >
-                <Link href="/login">I already have an account</Link>
-              </Button>
+              {isLoggedIn ? (
+                <Button
+                  asChild
+                  size="lg"
+                  className="h-[52px] rounded-full bg-emerald-600 px-7 text-base shadow-[0_22px_45px_-20px_rgba(5,150,105,0.85)] hover:bg-emerald-700"
+                >
+                  <Link href="/dashboard">
+                    Go to dashboard
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </Button>
+              ) : (
+                <>
+                  <Button
+                    asChild
+                    size="lg"
+                    className="h-[52px] rounded-full bg-emerald-600 px-7 text-base shadow-[0_22px_45px_-20px_rgba(5,150,105,0.85)] hover:bg-emerald-700"
+                  >
+                    <Link href="/register">
+                      Start splitting for free
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                  <Button
+                    asChild
+                    size="lg"
+                    variant="outline"
+                    className="h-[52px] rounded-full border-slate-200 bg-white/80 px-7 text-base backdrop-blur hover:bg-white"
+                  >
+                    <Link href="/login">I already have an account</Link>
+                  </Button>
+                </>
+              )}
             </div>
 
             <div className="mt-10 flex flex-wrap gap-6 text-sm text-slate-600">
@@ -492,24 +525,39 @@ export default function HomePage() {
               </p>
 
               <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-                <Button
-                  asChild
-                  size="lg"
-                  className="rounded-full bg-white px-7 text-slate-950 hover:bg-slate-100"
-                >
-                  <Link href="/register">
-                    Create free account
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </Button>
-                <Button
-                  asChild
-                  size="lg"
-                  variant="outline"
-                  className="rounded-full border-white/20 bg-white/5 px-7 text-white hover:bg-white/10"
-                >
-                  <Link href="/login">Sign in</Link>
-                </Button>
+                {isLoggedIn ? (
+                  <Button
+                    asChild
+                    size="lg"
+                    className="rounded-full bg-white px-7 text-slate-950 hover:bg-slate-100"
+                  >
+                    <Link href="/dashboard">
+                      Open dashboard
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                ) : (
+                  <>
+                    <Button
+                      asChild
+                      size="lg"
+                      className="rounded-full bg-white px-7 text-slate-950 hover:bg-slate-100"
+                    >
+                      <Link href="/register">
+                        Create free account
+                        <ArrowRight className="h-4 w-4" />
+                      </Link>
+                    </Button>
+                    <Button
+                      asChild
+                      size="lg"
+                      variant="outline"
+                      className="rounded-full border-white/20 bg-white/5 px-7 text-white hover:bg-white/10"
+                    >
+                      <Link href="/login">Sign in</Link>
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
 
