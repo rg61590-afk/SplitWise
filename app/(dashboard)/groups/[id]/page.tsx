@@ -81,7 +81,7 @@ export default function GroupDetailPage({ params }: { params: Promise<{ id: stri
   const [memberToRemove, setMemberToRemove] = useState<string | null>(null);
   const [isRemovingMember, setIsRemovingMember] = useState(false);
 
-  const isAdmin = group?.members.some(
+  const isAdmin = group?.members?.some(
     (m) => m.user._id === session?.user?.id && m.role === "admin"
   );
 
@@ -216,7 +216,7 @@ export default function GroupDetailPage({ params }: { params: Promise<{ id: stri
               <div>
                 <CardTitle className="text-lg">Members</CardTitle>
                 <CardDescription>
-                  {group.members.length} member{group.members.length !== 1 ? "s" : ""}
+                  {group?.members?.length} member{group?.members?.length !== 1 ? "s" : ""}
                 </CardDescription>
               </div>
               {isAdmin && (
@@ -228,7 +228,7 @@ export default function GroupDetailPage({ params }: { params: Promise<{ id: stri
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {group.members.map((member, index) => (
+                {group?.members?.map((member, index) => (
                   <div key={member.user._id}>
                     {index > 0 && <Separator className="mb-4" />}
                     <div className="flex items-center justify-between">

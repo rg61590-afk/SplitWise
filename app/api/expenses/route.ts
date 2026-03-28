@@ -110,7 +110,7 @@ export async function POST(request: Request) {
       participantIds = splitAmong;
     } else {
       // Split among all group members
-      participantIds = group.members.map((m) => m.user.toString());
+      participantIds = group?.members?.map((m) => m.user.toString());
     }
 
     // Calculate equal share
