@@ -158,10 +158,11 @@ export function EditExpenseDialog({
               variant="outline"
               onClick={() => onOpenChange(false)}
               disabled={isLoading}
+              className="cursor-pointer"
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isLoading}>
+            <Button type="submit" disabled={isLoading} className="cursor-pointer">
               {isLoading ? <Spinner className="mr-2 h-4 w-4" /> : null}
               Save Changes
             </Button>
