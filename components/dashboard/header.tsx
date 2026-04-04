@@ -24,7 +24,7 @@ interface UserProps {
 export function DashboardHeader({ user }: { user: UserProps }) {
   return (
     <header className="sticky top-0 z-40 px-4 pt-4 sm:px-6 lg:px-8">
-      <div className="mx-auto flex h-[72px] w-full max-w-7xl items-center justify-between rounded-[1.75rem] border border-white/80 bg-white/75 px-4 shadow-[0_25px_80px_-40px_rgba(15,23,42,0.28)] backdrop-blur-xl sm:px-5">
+      <div className="mx-auto flex h-18 w-full max-w-7xl items-center justify-between rounded-[1.75rem] border border-white/80 bg-white/75 px-4 shadow-[0_25px_80px_-40px_rgba(15,23,42,0.28)] backdrop-blur-xl sm:px-5">
         <div className="min-w-0">
           <div className="lg:hidden">
             <Link href="/dashboard" className="flex items-center gap-3">
@@ -55,7 +55,7 @@ export function DashboardHeader({ user }: { user: UserProps }) {
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3">
-          <div className="hidden items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-500 md:flex">
+          {/* <div className="hidden items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-500 md:flex">
             <Search className="h-4 w-4" />
             Quick overview
           </div>
@@ -66,7 +66,7 @@ export function DashboardHeader({ user }: { user: UserProps }) {
             className="rounded-full border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-900"
           >
             <Bell className="h-4 w-4" />
-          </Button>
+          </Button> */}
 
           <div className="hidden text-right sm:block">
             <p className="text-sm font-medium text-slate-900">{user.name}</p>
