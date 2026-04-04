@@ -158,7 +158,7 @@ export function GroupExpenses({
             this group
           </p>
         </div>
-        <Button onClick={() => setIsAddOpen(true)}>
+        <Button onClick={() => setIsAddOpen(true)} className="cursor-pointer">
           <Plus className="h-4 w-4 mr-2" />
           Add Expense
         </Button>
@@ -170,7 +170,7 @@ export function GroupExpenses({
           title="No expenses yet"
           description="Add your first expense to start tracking."
           action={
-            <Button onClick={() => setIsAddOpen(true)}>
+            <Button onClick={() => setIsAddOpen(true)} className="cursor-pointer">
               <Plus className="h-4 w-4 mr-2" />
               Add Expense
             </Button>
@@ -290,7 +290,7 @@ export function GroupExpenses({
             <AlertDialogAction
               onClick={handleDeleteExpense}
               disabled={isDeleting}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90 cursor-pointer"
             >
               {isDeleting ? (
                 <>
