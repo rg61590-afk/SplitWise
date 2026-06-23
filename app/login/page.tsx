@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -45,10 +45,19 @@ const highlights = [
 ];
 
 export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center" />}>
+      <LoginPageContent />
+    </Suspense>
+  );
+}
+
+function LoginPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
   const error = searchParams.get("error");
+  const googleEnabled = process.env.NEXT_PUBLIC_GOOGLE_ENABLED === "true" || process.env.NEXT_PUBLIC_GOOGLE_ENABLED === "1";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -91,6 +100,11 @@ export default function LoginPage() {
   };
 
   const handleGoogleSignIn = async () => {
+    if (!googleEnabled) {
+      toast.error("Google OAuth is not configured yet. Set GOOGLE_CLIENT_ID/SECRET and enable NEXT_PUBLIC_GOOGLE_ENABLED=true.");
+      return;
+    }
+
     setIsGoogleLoading(true);
     try {
       await signIn("google", { callbackUrl });
@@ -232,15 +246,20 @@ export default function LoginPage() {
                   variant="outline"
                   className="h-12 w-full rounded-2xl border-slate-200 bg-white text-base shadow-sm hover:bg-slate-50 cursor-pointer"
                   onClick={handleGoogleSignIn}
-                  disabled={isGoogleLoading || isLoading}
+                  disabled={isGoogleLoading || isLoading || !googleEnabled}
                 >
                   {isGoogleLoading ? (
                     <Spinner className="mr-2 h-4 w-4" />
                   ) : (
                     <Chrome className="mr-2 h-4 w-4" />
                   )}
-                  Continue with Google
+                  {googleEnabled ? "Continue with Google" : "Google OAuth pending setup"}
                 </Button>
+                {!googleEnabled && (
+                  <p className="text-center text-sm text-slate-500">
+                    Add Google credentials and restart the app to enable this option.
+                  </p>
+                )}
 
                 <div className="relative">
                   <div className="absolute inset-0 flex items-center">

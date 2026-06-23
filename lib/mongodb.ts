@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
-
-const MONGODB_URI = process.env.MONGODB_URI;
+import { MongoMemoryServer } from "mongodb-memory-server";
 
 interface MongooseCache {
   conn: typeof mongoose | null;
@@ -19,8 +18,15 @@ if (!global.mongoose) {
 }
 
 async function connectDB(): Promise<typeof mongoose> {
-  if (!MONGODB_URI) {
-    throw new Error("Please define the MONGODB_URI environment variable");
+  const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
+
+  if (!mongoUri) {
+    try {
+      const memoryServer = await MongoMemoryServer.create();
+      process.env.MONGODB_URI = memoryServer.getUri();
+    } catch {
+      process.env.MONGODB_URI = "mongodb://127.0.0.1:27017/splitease";
+    }
   }
 
   if (cached.conn) {
@@ -32,7 +38,7 @@ async function connectDB(): Promise<typeof mongoose> {
       bufferCommands: false,
     };
 
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+    cached.promise = mongoose.connect(process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/splitease", opts).then((mongoose) => {
       return mongoose;
     });
   }

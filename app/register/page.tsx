@@ -47,6 +47,7 @@ const benefits = [
 
 export default function RegisterPage() {
   const router = useRouter();
+  const googleEnabled = process.env.NEXT_PUBLIC_GOOGLE_ENABLED === "true" || process.env.NEXT_PUBLIC_GOOGLE_ENABLED === "1";
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -107,6 +108,11 @@ export default function RegisterPage() {
   };
 
   const handleGoogleSignIn = async () => {
+    if (!googleEnabled) {
+      toast.error("Google OAuth is not configured yet. Set GOOGLE_CLIENT_ID/SECRET and enable NEXT_PUBLIC_GOOGLE_ENABLED=true.");
+      return;
+    }
+
     setIsGoogleLoading(true);
     try {
       await signIn("google", { callbackUrl: "/dashboard" });
@@ -252,15 +258,20 @@ export default function RegisterPage() {
                   variant="outline"
                   className="h-12 w-full rounded-2xl border-slate-200 bg-white text-base shadow-sm cursor-pointer hover:bg-slate-50"
                   onClick={handleGoogleSignIn}
-                  disabled={isGoogleLoading || isLoading}
+                  disabled={isGoogleLoading || isLoading || !googleEnabled}
                 >
                   {isGoogleLoading ? (
                     <Spinner className="mr-2 h-4 w-4" />
                   ) : (
                     <Chrome className="mr-2 h-4 w-4" />
                   )}
-                  Continue with Google
+                  {googleEnabled ? "Continue with Google" : "Google OAuth pending setup"}
                 </Button>
+                {!googleEnabled && (
+                  <p className="text-center text-sm text-slate-500">
+                    Add Google credentials and restart the app to enable this option.
+                  </p>
+                )}
 
                 <div className="relative">
                   <div className="absolute inset-0 flex items-center">
