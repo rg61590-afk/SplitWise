@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import useSWR from "swr";
 import { useSession } from "next-auth/react";
 import { format } from "date-fns";
@@ -16,6 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import { Spinner } from "@/components/ui/spinner";
 import { Empty } from "@/components/ui/empty";
 import { Button } from "@/components/ui/button";
+import { AddExpenseDialog } from "@/components/expenses/add-expense-dialog";
 import {
   ArrowRight,
   ExternalLink,
@@ -73,10 +75,21 @@ const categoryColors: Record<string, string> = {
 
 export default function ExpensesPage() {
   const { data: session } = useSession();
-  const { data: expenses, error, isLoading } = useSWR<Expense[]>(
-    "/api/expenses",
+  const {
+    data: expenses,
+    error,
+    isLoading,
+    mutate,
+  } = useSWR<Expense[]>("/api/expenses", fetcher);
+  const {
+    data: groups,
+    mutate: mutateGroups,
+  } = useSWR<Array<{ _id: string; members: Array<{ user: { _id: string; name: string; email: string; image?: string } }> }>>(
+    "/api/groups",
     fetcher
   );
+  const [isQuickExpenseOpen, setIsQuickExpenseOpen] = useState(false);
+  const [selectedQuickGroupId, setSelectedQuickGroupId] = useState<string>();
 
   const formatCurrency = (amount: number) =>
     new Intl.NumberFormat("en-IN", {
@@ -84,6 +97,27 @@ export default function ExpensesPage() {
       currency: "INR",
       minimumFractionDigits: 2,
     }).format(amount);
+
+  const quickExpenseGroups = (groups ?? []).map((group) => ({
+    ...group,
+    members: group.members.map((member) => ({
+      user: member.user,
+      role: "member" as const,
+    })),
+  }));
+
+  const selectedQuickGroup = quickExpenseGroups.find(
+    (group) => group._id === selectedQuickGroupId
+  );
+
+  const handleQuickExpense = () => {
+    if (quickExpenseGroups.length === 0) {
+      return;
+    }
+
+    setSelectedQuickGroupId(quickExpenseGroups[0]._id);
+    setIsQuickExpenseOpen(true);
+  };
 
   if (isLoading) {
     return (
@@ -141,6 +175,26 @@ export default function ExpensesPage() {
                 Browse all expense activity across your groups, see where your
                 money went, and understand what still needs to come back.
               </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Button
+                  onClick={handleQuickExpense}
+                  className="rounded-full bg-white text-slate-950 hover:bg-slate-100"
+                  disabled={quickExpenseGroups.length === 0}
+                >
+                  <ReceiptText className="mr-2 h-4 w-4" />
+                  Log expense
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  className="rounded-full border-white/15 bg-white/5 text-white"
+                >
+                  <Link href="/groups">
+                    Manage groups
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -322,6 +376,19 @@ export default function ExpensesPage() {
             })}
           </CardContent>
         </Card>
+      )}
+
+      {selectedQuickGroup && (
+        <AddExpenseDialog
+          open={isQuickExpenseOpen}
+          onOpenChange={setIsQuickExpenseOpen}
+          groupId={selectedQuickGroup._id}
+          members={selectedQuickGroup.members}
+          onSuccess={() => {
+            mutate();
+            mutateGroups();
+          }}
+        />
       )}
     </div>
   );

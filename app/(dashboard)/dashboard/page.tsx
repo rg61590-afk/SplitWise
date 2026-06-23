@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import useSWR from "swr";
 import { useSession } from "next-auth/react";
 import { format } from "date-fns";
@@ -15,6 +16,8 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Spinner } from "@/components/ui/spinner";
+import { CreateGroupDialog } from "@/components/groups/create-group-dialog";
+import { AddExpenseDialog } from "@/components/expenses/add-expense-dialog";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -88,10 +91,13 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function DashboardPage() {
   const { data: session } = useSession();
-  const { data, error, isLoading } = useSWR<DashboardData>(
+  const { data, error, isLoading, mutate } = useSWR<DashboardData>(
     "/api/dashboard",
     fetcher
   );
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [isQuickExpenseOpen, setIsQuickExpenseOpen] = useState(false);
+  const [selectedQuickGroupId, setSelectedQuickGroupId] = useState<string>();
 
   const formatCurrency = (amount: number) =>
     new Intl.NumberFormat("en-IN", {
@@ -99,6 +105,28 @@ export default function DashboardPage() {
       currency: "INR",
       minimumFractionDigits: 2,
     }).format(amount);
+
+  const quickExpenseGroups = (data?.groups ?? []).map((group) => ({
+    ...group,
+    members: group.members.map((member) => ({
+      user: member.user,
+      role: "member" as const,
+    })),
+  }));
+
+  const selectedQuickGroup = quickExpenseGroups.find(
+    (group) => group._id === selectedQuickGroupId
+  );
+
+  const handleQuickExpense = () => {
+    if (quickExpenseGroups.length === 0) {
+      setIsCreateOpen(true);
+      return;
+    }
+
+    setSelectedQuickGroupId(quickExpenseGroups[0]._id);
+    setIsQuickExpenseOpen(true);
+  };
 
   if (isLoading) {
     return (
@@ -177,23 +205,19 @@ export default function DashboardPage() {
 
                 <div className="flex flex-col gap-3 sm:flex-row md:flex-col">
                   <Button
-                    asChild
+                    onClick={() => setIsCreateOpen(true)}
                     className="rounded-full bg-white text-slate-950 hover:bg-slate-100"
                   >
-                    <Link href="/groups">
-                      <Plus className="mr-2 h-4 w-4" />
-                      New group
-                    </Link>
+                    <Plus className="mr-2 h-4 w-4" />
+                    New group
                   </Button>
                   <Button
-                    asChild
+                    onClick={handleQuickExpense}
                     variant="outline"
-                    className="rounded-full border-white/15 bg-white/5 text-white "
+                    className="rounded-full border-white/15 bg-white/5 text-white"
                   >
-                    <Link href="/settlements">
-                      Review settlements
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
+                    Log expense
+                    <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </div>
               </div>
@@ -587,6 +611,22 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
       </section>
+
+      <CreateGroupDialog
+        open={isCreateOpen}
+        onOpenChange={setIsCreateOpen}
+        onSuccess={() => mutate()}
+      />
+
+      {selectedQuickGroup && (
+        <AddExpenseDialog
+          open={isQuickExpenseOpen}
+          onOpenChange={setIsQuickExpenseOpen}
+          groupId={selectedQuickGroup._id}
+          members={selectedQuickGroup.members}
+          onSuccess={() => mutate()}
+        />
+      )}
     </div>
   );
 }

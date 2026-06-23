@@ -58,8 +58,9 @@ export async function POST(request: Request) {
     );
   } catch (error) {
     console.error("Registration error:", error);
+    const message = error instanceof Error ? error.message : "An error occurred during registration";
     return NextResponse.json(
-      { error: "An error occurred during registration" },
+      { error: message },
       { status: 500 }
     );
   }

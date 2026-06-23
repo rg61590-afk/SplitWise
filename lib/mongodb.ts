@@ -20,6 +20,10 @@ if (!global.mongoose) {
 async function connectDB(): Promise<typeof mongoose> {
   const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
 
+  if (mongoUri) {
+    process.env.MONGODB_URI = mongoUri;
+  }
+
   if (!mongoUri) {
     try {
       const memoryServer = await MongoMemoryServer.create();

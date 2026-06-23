@@ -8,6 +8,10 @@ import User from "@/models/User";
 const authSecret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || "dev-secret-change-me";
 const googleEnabled = Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET);
 
+if (!process.env.AUTH_SECRET && process.env.NEXTAUTH_SECRET) {
+  process.env.AUTH_SECRET = process.env.NEXTAUTH_SECRET;
+}
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     ...(googleEnabled
@@ -36,7 +40,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           throw new Error("Email and password are required");
         }
 
-        await connectDB();
+        try {
+          await connectDB();
+        } catch (error) {
+          throw new Error(
+            error instanceof Error ? error.message : "Database connection failed"
+          );
+        }
 
         const user = await User.findOne({ email: credentials.email }).select(
           "+password"
@@ -71,7 +81,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async signIn({ user, account }) {
       if (account?.provider === "google") {
-        await connectDB();
+        try {
+          await connectDB();
+        } catch (error) {
+          console.error("Google sign-in DB error:", error);
+          return false;
+        }
 
         const existingUser = await User.findOne({ email: user.email });
 
@@ -89,7 +104,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     async jwt({ token, user }) {
       if (user) {
-        await connectDB();
+        try {
+          await connectDB();
+        } catch (error) {
+          console.error("JWT DB error:", error);
+        }
         const dbUser = await User.findOne({ email: user.email });
         if (dbUser) {
           token.id = dbUser._id.toString();

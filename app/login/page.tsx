@@ -56,6 +56,7 @@ function LoginPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
+  const resolvedCallbackUrl = callbackUrl.startsWith("/") ? callbackUrl : "/dashboard";
   const error = searchParams.get("error");
   const googleEnabled = process.env.NEXT_PUBLIC_GOOGLE_ENABLED === "true" || process.env.NEXT_PUBLIC_GOOGLE_ENABLED === "1";
 
@@ -89,8 +90,11 @@ function LoginPageContent() {
         toast.error(result.error);
       } else {
         toast.success("Welcome back!");
-        router.push(callbackUrl);
-        router.refresh();
+        if (typeof window !== "undefined") {
+          window.location.assign(resolvedCallbackUrl);
+        } else {
+          router.replace(resolvedCallbackUrl);
+        }
       }
     } catch {
       toast.error("An error occurred during sign in");
@@ -107,7 +111,7 @@ function LoginPageContent() {
 
     setIsGoogleLoading(true);
     try {
-      await signIn("google", { callbackUrl });
+      await signIn("google", { callbackUrl: resolvedCallbackUrl });
     } catch {
       toast.error("An error occurred with Google sign in");
       setIsGoogleLoading(false);
