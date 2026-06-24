@@ -27,7 +27,7 @@ const navigation = [
   { name: "Groups", href: "/groups", icon: Users },
   { name: "Expenses", href: "/expenses", icon: Receipt },
   { name: "Settlements", href: "/settlements", icon: ArrowLeftRight },
-  { name: "Settings", href: "/settings", icon: Settings },
+  { name: "Profile", href: "/profile", icon: Settings },
 ];
 
 export function DashboardSidebar({ user }: { user: User }) {

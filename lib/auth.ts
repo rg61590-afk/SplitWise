@@ -7,9 +7,20 @@ import User from "@/models/User";
 
 const authSecret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || "dev-secret-change-me";
 const googleEnabled = Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET);
+const runtimeBaseUrl = process.env.NODE_ENV === "development"
+  ? "http://127.0.0.1:3000"
+  : (process.env.NEXTAUTH_URL || process.env.AUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000"));
 
 if (!process.env.AUTH_SECRET && process.env.NEXTAUTH_SECRET) {
   process.env.AUTH_SECRET = process.env.NEXTAUTH_SECRET;
+}
+
+if (!process.env.NEXTAUTH_URL) {
+  process.env.NEXTAUTH_URL = runtimeBaseUrl;
+}
+
+if (!process.env.AUTH_URL) {
+  process.env.AUTH_URL = runtimeBaseUrl;
 }
 
 export const { handlers, signIn, signOut, auth } = NextAuth({

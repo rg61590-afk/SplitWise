@@ -110,7 +110,7 @@ export function DashboardHeader({ user }: { user: UserProps }) {
                 asChild
                 className="rounded-xl px-3 py-2 text-slate-700"
               >
-                <Link href="/settings" className="cursor-pointer">
+                <Link href="/profile" className="cursor-pointer">
                   <User className="mr-2 h-4 w-4" />
                   Profile
                 </Link>
@@ -119,9 +119,9 @@ export function DashboardHeader({ user }: { user: UserProps }) {
                 asChild
                 className="rounded-xl px-3 py-2 text-slate-700"
               >
-                <Link href="/settings" className="cursor-pointer">
+                <Link href="/profile" className="cursor-pointer">
                   <Settings className="mr-2 h-4 w-4" />
-                  Settings
+                  Profile settings
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
