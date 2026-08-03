@@ -180,7 +180,7 @@ This project is licensed under the MIT License.
 
 ## 👨‍💻 Author
 
-Adarsh Jain
+Rohit Gurjar
 MERN Stack Developer
 
 ---
